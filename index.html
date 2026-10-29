@@ -4,64 +4,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Best Imports - Eletrônicos e Tecnologia</title>
+    <title>Best Imports - Mercado Livre Style E-Commerce</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="icon" type="image/png" href="logo.png">
-
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
-    <script>
-        !function (f, b, e, v, n, t, s) {
-            if (f.fbq) return; n = f.fbq = function () {
-                n.callMethod ?
-                    n.callMethod.apply(n, arguments) : n.queue.push(arguments)
-            };
-            if (!f._fbq) f._fbq = n;
-            n.push = n; n.loaded = !0; n.version = '2.0';
-            n.queue = [];
-            t = b.createElement(e); t.async = !0;
-            t.src = v;
-            s = b.getElementsByTagName(e)[0];
-            s.parentNode.insertBefore(t, s)
-        }(window, document, 'script', 'https://connect.facebook.net/en_US/fbevents.js');
-
-        fbq('init', '784923854077490');
-        fbq('track', 'PageView');
-    </script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
-                        primary: '#000000',
-                        accent: '#eab308',
-                        brandBg: '#f5f6f7',
+                        // Cores oficiais da nova Logo da Best Imports
+                        brandBlue: '#0b5091',
+                        brandBlueDark: '#073663',
+                        brandYellow: '#f5ad00',
+                        brandYellowHover: '#d99900',
+                        brandDark: '#0c182b',
+                        brandBear: '#8b4513',
+                        mlBg: '#f2f4f7',
+                        mlGreen: '#00a650',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
                     }
                 }
             }
         }
     </script>
+
     <style type="text/tailwindcss">
         @layer components {
-            .btn-tab { @apply ml-4 mr-2 py-2 text-black font-bold transition-all border-b-2 border-transparent uppercase text-[14px] tracking-tighter whitespace-nowrap shrink-0 cursor-pointer; }
-            .btn-tab.active { @apply border-primary; }
+            .btn-category {
+                @apply text-xs font-semibold text-white/90 hover:text-brandYellow transition-colors whitespace-nowrap px-2.5 py-1 cursor-pointer rounded-full hover:bg-white/10;
+            }
             .modal-container { 
-                @apply fixed inset-0 bg-black/70 z-[1000] flex items-center justify-center hidden; 
+                @apply fixed inset-0 bg-black/70 z-[1000] flex items-center justify-center p-4 hidden transition-opacity duration-200; 
             }
-
             .modal-content-center { 
-                @apply bg-brandBg w-full max-w-full h-full p-6 overflow-y-auto animate-[popIn_0.2s_ease-out];
-                scrollbar-width: none; 
-                -ms-overflow-style: none; 
+                @apply bg-white w-full max-w-lg rounded-2xl p-6 overflow-y-auto max-h-[90vh] shadow-2xl relative animate-[popIn_0.2s_ease-out];
+                scrollbar-width: thin; 
             }
-            .modal-content-center::-webkit-scrollbar { display: none; }
-            .product-card { @apply bg-white border-2 border-transparent p-4 rounded-xl text-center cursor-pointer shadow-sm font-semibold transition-all; }
-            .product-card.selected { @apply border-primary bg-yellow-50 text-primary; }
-            .modal-alert-content { @apply bg-white rounded-3xl p-8 w-full max-w-xs text-center shadow-2xl animate-[popIn_0.2s_ease-out]; }
-            
+            .product-card { 
+                @apply bg-white rounded-2xl p-4 shadow-sm border border-gray-100 flex flex-col justify-between hover:shadow-lg transition-all duration-300 cursor-pointer relative group hover:-translate-y-1; 
+            }
+            .badge-free-shipping {
+                @apply text-[11px] font-bold text-mlGreen bg-emerald-50 px-2 py-0.5 rounded w-fit;
+            }
             .autocomplete-items {
                 @apply absolute border border-gray-200 border-t-0 z-[9999] top-full left-0 right-0 bg-white rounded-b-xl max-h-48 overflow-y-auto shadow-xl;
             }
@@ -69,311 +60,565 @@
                 @apply p-3 cursor-pointer text-sm border-b border-gray-50 last:border-0 hover:bg-gray-100 text-left text-gray-700 font-normal;
             }
         }
-        @keyframes popIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-        .btn-tab { transition: border-color 0.2s ease, transform 0.15s ease; }
-        .btn-tab.active { transform: scale(1.02); }
+        @keyframes popIn { 
+            from { transform: scale(0.95); opacity: 0; } 
+            to { transform: scale(1); opacity: 1; } 
+        }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
 </head>
 
-<body class="bg-brandBg text-gray-800 flex flex-col min-h-screen">
+<body class="bg-mlBg text-gray-800 font-sans flex flex-col min-h-screen">
 
+    <!-- Modal de Alerta Customizado -->
     <div id="alertModal" class="modal-container" style="z-index: 3000;" onclick="closeAlert()">
-        <div class="modal-alert-content" onclick="event.stopPropagation()">
-            <div id="alertIcon" class="text-6xl mb-4"></div>
-            <h3 id="alertTitle" class="text-2xl font-bold text-gray-800 mb-2"></h3>
-            <p id="alertMessage" class="text-gray-600 mb-8 leading-relaxed"></p>
+        <div class="bg-white rounded-2xl p-6 w-full max-w-sm text-center shadow-2xl animate-[popIn_0.2s_ease-out]" onclick="event.stopPropagation()">
+            <div id="alertIcon" class="text-5xl mb-3"></div>
+            <h3 id="alertTitle" class="text-xl font-bold text-gray-800 mb-2"></h3>
+            <p id="alertMessage" class="text-gray-600 text-sm mb-6 leading-relaxed"></p>
 
             <div id="alertButtons" class="space-y-2">
                 <button id="alertBtnPrimary" onclick="closeAlert()"
-                    class="w-full bg-primary text-white py-4 rounded-2xl font-bold uppercase shadow-lg active:scale-95">Entendido</button>
+                    class="w-full bg-brandBlue text-white py-3 rounded-xl font-bold text-sm shadow hover:bg-brandBlueDark transition-all active:scale-95">Entendido</button>
                 <button id="alertBtnCart" onclick="showCart(); closeAlert();"
-                    class="w-full bg-green-600 text-white py-4 rounded-2xl font-bold uppercase shadow-lg active:scale-95 hidden">Ver
-                    Carrinho</button>
+                    class="w-full bg-mlGreen text-white py-3 rounded-xl font-bold text-sm shadow hover:bg-emerald-600 transition-all active:scale-95 hidden">Ver Carrinho</button>
             </div>
         </div>
     </div>
 
-    <header class="bg-white h-[130px] flex justify-between items-center shadow-md px-6">
-        <img src="logo.png" alt="Best Imports" class="w-[120px] object-contain rounded-md">
-        <div class="relative cursor-pointer" onclick="showCart()">
-            <i class="fas fa-shopping-cart text-primary text-2xl"></i>
-            <span id="cartBadge"
-                class="absolute -top-2 -right-2 bg-green-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center hidden font-bold">0</span>
+    <!-- CABEÇALHO COM A PALETA E LOGO BEST IMPORTS -->
+    <header class="bg-gradient-to-r from-brandDark via-brandBlueDark to-brandBlue text-white border-b-4 border-brandYellow sticky top-0 z-40 shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 py-2.5">
+            <!-- Linha Superior: Logo, Busca, Promo, Usuário/Carrinho -->
+            <div class="flex items-center justify-between gap-3 md:gap-6">
+                
+                <!-- Logo Oficial Best Imports -->
+                <a href="#" class="flex items-center gap-2 flex-shrink-0 group">
+                    <img src="logo.png" alt="Best Imports Logo" class="h-14 md:h-16 w-auto object-contain transition-transform group-hover:scale-105 drop-shadow-md" onerror="this.src='https://placehold.co/180x60/0562ca/ffffff?text=BEST+IMPORTS'">
+                </a>
+
+                <!-- Barra de Pesquisa Estilo Mercado Livre adaptada -->
+                <div class="flex-1 max-w-2xl relative">
+                    <div class="flex items-center bg-white rounded-xl shadow-inner border-2 border-transparent focus-within:border-brandYellow overflow-hidden transition-all">
+                        <input type="text" id="searchInput" onkeyup="filterProducts()" placeholder="Buscar produtos, eletrônicos, marcas..." 
+                            class="w-full px-4 py-2.5 text-sm text-gray-900 outline-none placeholder-gray-400">
+                        <button class="bg-brandYellow hover:bg-brandYellowHover text-brandDark px-5 py-2.5 font-bold transition-colors flex items-center gap-1">
+                            <i class="fas fa-search text-sm"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Banner Promocional no Topo (Desktop) -->
+                <div class="hidden lg:flex items-center">
+                    <div class="bg-gradient-to-r from-brandYellow to-amber-400 text-brandDark text-[11px] font-black px-3.5 py-1.5 rounded-full uppercase tracking-wider shadow-md flex items-center gap-1.5 animate-bounce">
+                        <i class="fas fa-plane-departure text-brandBlueDark"></i> Produtos C/ PRONTA ENTREGA
+                    </div>
+                </div>
+
+                <!-- Ações do Usuário & Carrinho -->
+                <div class="flex items-center gap-4 flex-shrink-0">
+                    <!-- Carrinho com Badge -->
+                    <div class="relative cursor-pointer p-2 bg-white/10 hover:bg-white/20 rounded-xl transition-all" onclick="showCart()" title="Ver carrinho">
+                        <i class="fas fa-shopping-cart text-brandYellow text-xl"></i>
+                        <span id="cartBadge" class="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-black rounded-full h-5 w-5 flex items-center justify-center border-2 border-brandBlueDark hidden">0</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Linha Inferior: Endereço & Links de Navegação -->
+            <div class="flex items-center justify-between mt-2 pt-2 border-t border-white/10 text-xs text-white overflow-x-auto no-scrollbar gap-4">
+                <!-- Localização -->
+                <div class="flex items-center gap-1.5 flex-shrink-0 cursor-pointer hover:text-brandYellow transition-colors" onclick="showCart(); switchCartStep(2);">
+                    <i class="fas fa-map-marker-alt text-brandYellow text-sm"></i>
+                    <span class="text-white/70 font-normal">Enviar para</span>
+                    <span id="navAddressDisplay" class="font-bold text-white truncate max-w-[150px] sm:max-w-[200px]">Várzea Grande - MT</span>
+                </div>
+
+                <!-- Categorias rápidas reorganizadas -->
+                <nav class="flex items-center gap-1 sm:gap-2 flex-shrink-0">
+                    <a href="#destaques" class="btn-category bg-brandYellow/20 text-brandYellow font-bold">Destaques</a>
+                    <a href="#eletrodomesticos" class="btn-category">Eletrodomésticos & Utensílios</a>
+                    <a href="#ferramentas" class="btn-category">Ferramentas</a>
+                    <a href="#eletronicos" class="btn-category">Eletrônicos</a>
+                    <a href="#info" class="btn-category text-white/80">Contato</a>
+                </nav>
+
+                <!-- Status de Atendimento -->
+                <div class="hidden xl:flex items-center gap-2 text-[11px] text-emerald-300 bg-emerald-950/40 border border-emerald-500/30 px-2.5 py-0.5 rounded-full font-bold">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+                    Loja Aberta - Envio Rápido
+                </div>
+            </div>
         </div>
     </header>
 
-    <nav
-        class="tabs flex sticky top-0 z-50 bg-white border-t-2 border-gray-200 shadow-lg font-sans overflow-x-auto whitespace-nowrap px-4">
-        <a onclick="scrollToIndexAndCenter('destaques')" id="btn-destaques" class="btn-tab active">Destaques</a>
-        <a onclick="scrollToIndexAndCenter('smartphones')" id="btn-smartphones" class="btn-tab">Smartphones</a>
-        <a onclick="scrollToIndexAndCenter('audio')" id="btn-audio" class="btn-tab">Fones & Áudio</a>
-        <a onclick="scrollToIndexAndCenter('acessorios')" id="btn-acessorios" class="btn-tab">Acessórios</a>
-        <a onclick="scrollToIndexAndCenter('ferramentas')" id="btn-ferramentas" class="btn-tab">Ferramentas</a>
-        <a onclick="scrollToIndexAndCenter('info')" id="btn-info" class="btn-tab">Mais Informações</a>
-    </nav>
+    <main class="max-w-7xl mx-auto w-full px-2 sm:px-4 py-5 space-y-6 flex-grow">
 
-    <div id="statusBanner"
-        class="w-full py-2 px-6 text-center text-xs font-bold uppercase tracking-widest transition-colors duration-500 bg-green-600 text-white">
-        <span id="statusText">● Loja Aberta - Envio Rápido para Região!</span>
-    </div>
+        <!-- BANNER HERO DE DESTAQUE COM AS CORES DA MARCA BEST IMPORTS -->
+        <section class="relative rounded-3xl overflow-hidden shadow-xl bg-gradient-to-r from-brandDark via-brandBlueDark to-brandBlue p-6 md:p-10 text-white border-2 border-brandYellow/30">
+            <div class="flex flex-col md:flex-row items-center justify-between gap-6 relative z-10">
+                <div class="space-y-4 text-center md:text-left max-w-xl">
+                    <div class="inline-flex items-center gap-2 bg-brandYellow text-brandDark text-xs font-black px-3.5 py-1 rounded-full uppercase tracking-wider shadow">
+                        <i class="fas fa-blender"></i> DESTAQUES: ELETRODOMÉSTICOS & UTENSÍLIOS
+                    </div>
+                    <h1 class="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight text-white uppercase italic leading-none">
+                        SUA CASA COM <br><span class="text-brandYellow">MAIS PRATICIDADE</span>
+                    </h1>
+                    <p class="text-sm sm:text-base text-gray-200 font-medium leading-relaxed">
+                        Confira os lançamentos em Air Fryers, Utensílios de Cozinha e Eletrônicos com pronta entrega e garantia!
+                    </p>
+                    <div class="pt-2 flex flex-wrap gap-3 justify-center md:justify-start">
+                        <a href="#eletrodomesticos" class="bg-brandYellow hover:bg-brandYellowHover text-brandDark font-black px-6 py-3 rounded-xl shadow-lg transition-transform active:scale-95 text-sm uppercase flex items-center gap-2">
+                            <i class="fas fa-fire"></i> Ver Eletrodomésticos
+                        </a>
+                    </div>
+                </div>
 
-    <main class="w-full px-4 md:px-8 mx-auto space-y-8 pb-12 mt-6 flex-grow">
+                <!-- Imagem Ilustrativa de Eletrodoméstico de Destaque -->
+                <div class="relative w-full max-w-xs md:max-w-sm flex justify-center">
+                    <div class="bg-white/10 p-3 rounded-3xl backdrop-blur-sm border border-white/20 shadow-2xl">
+                        <img src="https://images.unsplash.com/photo-1584269600464-37b1b58a9fe7?w=600&auto=format&fit=crop&q=80" 
+                            alt="Air Fryer Destaque Best Imports" 
+                            class="rounded-2xl shadow-xl object-cover h-52 sm:h-60 w-full transform hover:scale-105 transition-transform duration-300">
+                    </div>
+                    <span class="absolute -top-3 -right-3 bg-red-600 text-white font-black text-xs px-3.5 py-1.5 rounded-full shadow-lg uppercase tracking-wider">
+                        Super Oferta
+                    </span>
+                </div>
+            </div>
+            
+            <!-- Elementos Decorativos de Fundo -->
+            <div class="absolute -right-10 -bottom-10 w-72 h-72 bg-brandYellow/10 rounded-full blur-3xl pointer-events-none"></div>
+            <div class="absolute -left-10 -top-10 w-72 h-72 bg-brandBlue/30 rounded-full blur-3xl pointer-events-none"></div>
+        </section>
 
-        <!-- Destaques -->
-        <div id="destaques" class="category-section space-y-3">
-            <div class="flex items-center gap-2 px-1">
-                <span class="text-yellow-500 text-sm"><i class="fas fa-bolt"></i></span>
-                <h2 class="font-bold text-xs tracking-[0.25em] text-gray-700 uppercase">Mais Vendidos</h2>
+        <!-- SEÇÃO DE WIDGETS DESTAQUE -->
+        <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <!-- Widget 1 -->
+            <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-200/80 flex flex-col justify-between hover:shadow-md transition-shadow">
+                <div>
+                    <div class="flex items-center gap-2 mb-3">
+                        <span class="w-2 h-4 bg-red-500 rounded-full"></span>
+                        <h3 class="font-bold text-brandDark text-sm">Mais Vendido na Cozinha</h3>
+                    </div>
+                    <div class="bg-red-50/50 p-3 rounded-xl flex items-center gap-3 mb-3 border border-red-100">
+                        <img src="https://images.unsplash.com/photo-1584269600464-37b1b58a9fe7?w=200&auto=format&fit=crop&q=60" class="w-16 h-16 object-cover rounded-lg bg-white border">
+                        <div>
+                            <p class="text-xs font-bold text-gray-800 line-clamp-1">Air Fryer Digital 5.5L</p>
+                            <span class="text-xs text-gray-400 line-through">R$ 549,90</span>
+                            <div class="text-base font-black text-brandBlue">R$ 399,90</div>
+                            <span class="text-[10px] text-mlGreen font-bold"><i class="fas fa-check-circle"></i> Pronta Entrega</span>
+                        </div>
+                    </div>
+                </div>
+                <button onclick="addToCartById(101)" class="w-full bg-brandBlue/10 hover:bg-brandBlue text-brandBlue hover:text-white font-bold py-2.5 rounded-xl text-xs transition-colors">
+                    Adicionar ao carrinho
+                </button>
+            </div>
+
+            <!-- Widget 2 -->
+            <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-200/80 flex flex-col justify-between hover:shadow-md transition-shadow">
+                <div>
+                    <div class="flex items-center gap-2 mb-3">
+                        <span class="w-2 h-4 bg-brandYellow rounded-full"></span>
+                        <h3 class="font-bold text-brandDark text-sm">Robô Aspirador Inteligente</h3>
+                    </div>
+                    <div class="bg-amber-50/50 p-3 rounded-xl flex items-center gap-3 mb-3 border border-amber-100">
+                        <img src="https://images.unsplash.com/photo-1589782182703-2aaa69037b5b?w=200&auto=format&fit=crop&q=60" class="w-16 h-16 object-cover rounded-lg bg-white border">
+                        <div>
+                            <p class="text-xs font-bold text-gray-800 line-clamp-1">Aspirador Robô Wi-Fi</p>
+                            <div class="text-base font-black text-gray-900">R$ 699,90</div>
+                            <span class="text-[10px] text-mlGreen font-bold">Até 10x sem juros</span>
+                        </div>
+                    </div>
+                </div>
+                <button onclick="abrirDetalhesProduto(102)" class="w-full bg-gray-100 hover:bg-gray-200 text-gray-800 font-bold py-2.5 rounded-xl text-xs transition-colors">
+                    Ver Detalhes
+                </button>
+            </div>
+
+            <!-- Widget 3 -->
+            <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-200/80 flex flex-col justify-between hover:shadow-md transition-shadow">
+                <div>
+                    <div class="flex items-center gap-2 mb-3">
+                        <span class="w-2 h-4 bg-brandBlue rounded-full"></span>
+                        <h3 class="font-bold text-brandDark text-sm">Ferramenta em Destaque</h3>
+                    </div>
+                    <div class="bg-blue-50/50 p-3 rounded-xl flex items-center gap-3 mb-3 border border-blue-100">
+                        <img src="https://images.unsplash.com/photo-1504148455328-c376907d081c?w=200&auto=format&fit=crop&q=60" class="w-16 h-16 object-cover rounded-lg bg-white border">
+                        <div>
+                            <p class="text-xs font-bold text-gray-800 line-clamp-1">Furadeira de Impacto 850W</p>
+                            <div class="text-base font-black text-gray-900">R$ 189,90</div>
+                            <span class="text-[10px] text-mlGreen font-bold">Kit com Brocas</span>
+                        </div>
+                    </div>
+                </div>
+                <button onclick="addToCartById(7)" class="w-full bg-brandBlue/10 hover:bg-brandBlue text-brandBlue hover:text-white font-bold py-2.5 rounded-xl text-xs transition-colors">
+                    Adicionar ao carrinho
+                </button>
+            </div>
+
+            <!-- Widget 4 -->
+            <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-200/80 flex flex-col justify-between hover:shadow-md transition-shadow">
+                <div>
+                    <div class="flex items-center gap-2 mb-3">
+                        <span class="w-2 h-4 bg-emerald-500 rounded-full"></span>
+                        <h3 class="font-bold text-brandDark text-sm">Entregas em VG e Cuiabá</h3>
+                    </div>
+                    <div class="space-y-2.5 mb-3">
+                        <div class="flex items-center gap-3 text-xs text-gray-700">
+                            <div class="w-8 h-8 rounded-full bg-emerald-100 text-mlGreen flex items-center justify-center font-bold">
+                                <i class="fas fa-truck"></i>
+                            </div>
+                            <div>
+                                <p class="font-bold text-gray-800">Envio Flex Rápido</p>
+                                <p class="text-[11px] text-gray-500">Receba no mesmo dia</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3 text-xs text-gray-700">
+                            <div class="w-8 h-8 rounded-full bg-blue-100 text-brandBlue flex items-center justify-center">
+                                <i class="fas fa-shield-alt"></i>
+                            </div>
+                            <div>
+                                <p class="font-bold text-gray-800">Garantia Best Imports</p>
+                                <p class="text-[11px] text-gray-500">Troca fácil garantida</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button onclick="showAlert('Calcule o frete no checkout digitando seu endereço completo!', 'info')" class="w-full text-brandBlue hover:underline text-xs font-bold text-left pt-2">
+                    Ver condições de frete
+                </button>
+            </div>
+        </section>
+
+        <!-- SEÇÃO 1: DESTAQUES (GERAL) -->
+        <section id="destaques" class="category-section space-y-4 pt-2">
+            <div class="flex items-center justify-between border-b border-gray-200 pb-3">
+                <div class="flex items-center gap-2">
+                    <div class="w-2.5 h-6 bg-brandYellow rounded-full"></div>
+                    <h2 class="text-xl font-black text-brandDark tracking-tight uppercase">Destaques da Loja</h2>
+                </div>
+                <span class="text-xs font-bold text-brandBlue cursor-pointer hover:underline">Ver todos os produtos</span>
             </div>
             <div id="destaquesList" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"></div>
-        </div>
+        </section>
 
-        <!-- Smartphones -->
-        <div id="smartphones" class="category-section space-y-3">
-            <h2 class="font-bold text-xs tracking-[0.25em] text-gray-700 uppercase px-1">Smartphones</h2>
-            <div id="smartphonesList" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"></div>
-        </div>
+        <!-- SEÇÃO 2: ELETRODOMÉSTICOS E UTENSÍLIOS -->
+        <section id="eletrodomesticos" class="category-section space-y-4 pt-4">
+            <div class="flex items-center justify-between border-b border-gray-200 pb-3">
+                <div class="flex items-center gap-2">
+                    <div class="w-2.5 h-6 bg-red-500 rounded-full"></div>
+                    <h2 class="text-xl font-black text-brandDark tracking-tight uppercase">Eletrodomésticos & Utensílios</h2>
+                </div>
+            </div>
+            <div id="eletrodomesticosList" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"></div>
+        </section>
 
-        <!-- Fones & Áudio -->
-        <div id="audio" class="category-section space-y-3">
-            <h2 class="font-bold text-xs tracking-[0.25em] text-gray-700 uppercase px-1">Fones & Áudio</h2>
-            <div id="audioList" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"></div>
-        </div>
-
-        <!-- Acessórios -->
-        <div id="acessorios" class="category-section space-y-3">
-            <h2 class="font-bold text-xs tracking-[0.25em] text-gray-700 uppercase px-1">Acessórios</h2>
-            <div id="acessoriosList" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"></div>
-        </div>
-
-        <!-- Ferramentas -->
-        <div id="ferramentas" class="category-section space-y-3">
-            <h2 class="font-bold text-xs tracking-[0.25em] text-gray-700 uppercase px-1">Ferramentas</h2>
+        <!-- SEÇÃO 3: FERRAMENTAS -->
+        <section id="ferramentas" class="category-section space-y-4 pt-4">
+            <div class="flex items-center justify-between border-b border-gray-200 pb-3">
+                <div class="flex items-center gap-2">
+                    <div class="w-2.5 h-6 bg-orange-500 rounded-full"></div>
+                    <h2 class="text-xl font-black text-brandDark tracking-tight uppercase">Ferramentas & Acessórios</h2>
+                </div>
+            </div>
             <div id="ferramentasList" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"></div>
-        </div>
+        </section>
+
+        <!-- SEÇÃO 4: ELETRÔNICOS -->
+        <section id="eletronicos" class="category-section space-y-4 pt-4">
+            <div class="flex items-center justify-between border-b border-gray-200 pb-3">
+                <div class="flex items-center gap-2">
+                    <div class="w-2.5 h-6 bg-brandBlue rounded-full"></div>
+                    <h2 class="text-xl font-black text-brandDark tracking-tight uppercase">Eletrônicos & Tecnologia</h2>
+                </div>
+            </div>
+            <div id="eletronicosList" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"></div>
+        </section>
+
     </main>
 
-    <!-- Rodapé (Footer) com Informações em Linha -->
-    <footer id="info" class="bg-white border-t border-gray-200 py-6 px-4 md:px-8 mt-auto">
-        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4 text-center md:text-left">
-            <!-- Localização -->
-            <div class="flex items-center gap-3 justify-center md:justify-start">
-                <div class="w-9 h-9 rounded-full bg-primary/5 text-primary flex items-center justify-center flex-shrink-0">
-                    <i class="fas fa-map-marker-alt text-sm"></i>
+    <!-- RODAPÉ CUSTOMIZADO BEST IMPORTS -->
+    <footer id="info" class="bg-brandDark text-white border-t-4 border-brandYellow py-10 px-4 mt-12">
+        <div class="max-w-7xl mx-auto space-y-8">
+            <!-- Vantagens da Marca -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center md:text-left border-b border-white/10 pb-8">
+                <div class="flex items-center gap-4 justify-center md:justify-start">
+                    <div class="w-12 h-12 rounded-2xl bg-brandYellow text-brandDark flex items-center justify-center text-xl flex-shrink-0 shadow-md font-bold">
+                        <i class="fas fa-plane"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-white text-sm">Produtos com Garantia</h4>
+                        <p class="text-xs text-gray-400">Produtos originais com excelente procedência</p>
+                    </div>
                 </div>
-                <div>
-                    <span class="text-[11px] font-bold tracking-[0.15em] uppercase text-gray-400 block">Localização</span>
-                    <span class="text-xs font-semibold text-gray-700">Várzea Grande - MT</span>
+
+                <div class="flex items-center gap-4 justify-center md:justify-start">
+                    <div class="w-12 h-12 rounded-2xl bg-brandBlue text-white flex items-center justify-center text-xl flex-shrink-0 shadow-md">
+                        <i class="fas fa-truck-fast"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-white text-sm">Envio Rápido para Região</h4>
+                        <p class="text-xs text-gray-400">Entrega rápida em Várzea Grande e Cuiabá</p>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-4 justify-center md:justify-start">
+                    <div class="w-12 h-12 rounded-2xl bg-emerald-500 text-white flex items-center justify-center text-2xl flex-shrink-0 shadow-md">
+                        <i class="fab fa-whatsapp"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-white text-sm">WhatsApp Oficial</h4>
+                        <a href="https://wa.me/5565993443715" target="_blank" class="text-xs font-bold text-emerald-400 hover:underline">
+                            (65) 99344-3715
+                        </a>
+                    </div>
                 </div>
             </div>
 
-            <!-- WhatsApp -->
-            <div class="flex items-center gap-3 justify-center md:justify-start">
-                <div class="w-9 h-9 rounded-full bg-green-600/10 text-green-600 flex items-center justify-center flex-shrink-0">
-                    <i class="fab fa-whatsapp text-sm"></i>
+            <!-- Dados da Marca -->
+            <div class="flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-gray-400">
+                <div class="flex items-center gap-3">
+                    <img src="logo.png" alt="Best Imports Logo" class="h-14 w-auto" onerror="this.style.display='none'">
+                    <div>
+                        <span class="font-bold text-white">Best Imports</span> — Eletrônicos • Tecnologia • Qualidade
+                        <p class="text-[11px] text-gray-500">Várzea Grande - MT</p>
+                    </div>
                 </div>
                 <div>
-                    <span class="text-[11px] font-bold tracking-[0.15em] uppercase text-gray-400 block">WhatsApp</span>
-                    <a href="https://wa.me/5565993443715" target="_blank"
-                        class="text-xs font-bold text-green-600 hover:underline">
-                        (65) 99344-3715
-                    </a>
+                    &copy; 2026 Best Imports. Todos os direitos reservados.
                 </div>
-            </div>
-
-            <!-- Copyright -->
-            <div class="text-xs text-gray-500 font-medium">
-                &copy; 2026 Best Imports. Todos os direitos reservados.
             </div>
         </div>
     </footer>
 
-    <!-- Modal de Detalhes do Produto -->
+    <!-- MODAL DE DETALHES DO PRODUTO -->
     <div id="productModal" class="modal-container" onclick="handleOutsideClick(event)">
-        <div class="modal-content-center max-w-xl mx-auto rounded-3xl bg-white shadow-2xl relative">
-            <button onclick="closeModal('productModal')" class="absolute top-4 right-4 text-gray-400 hover:text-black z-10 w-10 h-10 flex items-center justify-center rounded-full bg-gray-100">
-                <i class="fas fa-times text-xl"></i>
+        <div class="modal-content-center">
+            <button onclick="closeModal('productModal')" class="absolute top-4 right-4 text-gray-400 hover:text-black z-10 w-9 h-9 flex items-center justify-center rounded-full bg-gray-100">
+                <i class="fas fa-times text-lg"></i>
             </button>
-            <div id="productModalContent" class="space-y-4 pt-2">
+            <div id="productModalContent" class="space-y-4 pt-1">
                 <!-- Conteúdo injetado via JS -->
             </div>
         </div>
     </div>
 
-    <!-- Modal do Carrinho -->
+    <!-- MODAL DO CARRINHO (2 ETAPAS) -->
     <div id="cartModal" class="modal-container" onclick="handleOutsideClick(event)">
         <div class="modal-content-center">
+            
+            <!-- ETAPA 1: Lista do Carrinho -->
             <div id="cartStep1">
-                <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-2xl font-bold text-primary italic">Seu Carrinho</h2>
-                    <button onclick="closeModal('cartModal')" class="text-gray-400"><i
-                            class="fas fa-times text-xl"></i></button>
+                <div class="flex justify-between items-center mb-4 border-b pb-3">
+                    <div class="flex items-center gap-2">
+                        <i class="fas fa-shopping-bag text-mlBlue text-xl"></i>
+                        <h2 class="text-xl font-bold text-gray-800">Seu Carrinho de Compras</h2>
+                    </div>
+                    <button onclick="closeModal('cartModal')" class="text-gray-400 hover:text-gray-600"><i class="fas fa-times text-lg"></i></button>
                 </div>
-                <div id="cartList" class="space-y-3 mb-6"></div>
-                <div class="flex justify-end">
-                    <div id="cartActions" class="flex w-52 gap-2 hidden">
-                        <button
-                            class="flex-1 bg-white border border-gray-200 text-gray-400 py-3 rounded-xl font-bold uppercase text-xs"
-                            onclick="closeModal('cartModal')">Comprar +</button>
+
+                <div id="cartList" class="space-y-2.5 mb-6 max-h-[50vh] overflow-y-auto pr-1"></div>
+
+                <!-- Resumo e Botões Etapa 1 -->
+                <div id="cartSummary" class="border-t pt-4 space-y-3 hidden">
+                    <div class="flex justify-between items-center text-sm">
+                        <span class="text-gray-500">Subtotal dos produtos:</span>
+                        <span id="cartSubtotal" class="font-bold text-gray-900 text-base">R$ 0,00</span>
+                    </div>
+
+                    <div class="flex gap-2 pt-2">
+                        <button class="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 py-3 rounded-xl font-bold text-xs uppercase transition-colors"
+                            onclick="closeModal('cartModal')">Continuar Comprando</button>
                         <button id="btnNextCart"
-                            class="flex-1 bg-primary text-white py-3 rounded-xl font-bold uppercase text-xs shadow-md"
-                            onclick="switchCartStep(2)">Finalizar</button>
+                            class="flex-1 bg-mlBlue hover:bg-mlDarkBlue text-white py-3 rounded-xl font-bold text-xs uppercase shadow-md transition-all active:scale-95"
+                            onclick="switchCartStep(2)">Continuar Checkout</button>
                     </div>
                 </div>
-                <div id="emptyCartMsg" class="text-center py-10 hidden">
-                    <i class="fas fa-shopping-bag text-gray-300 text-5xl mb-4"></i>
-                    <p class="text-gray-400 font-semibold mb-6">Seu carrinho está vazio</p>
-                </div>
-            </div>
 
-            <div id="cartStep2" class="hidden">
-                <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-2xl font-bold text-primary italic">Finalizar Pedido</h2>
-                    <button onclick="switchCartStep(1)" class="text-gray-400"><i
-                            class="fas fa-arrow-left text-xl"></i></button>
-                </div>
-                <div class="space-y-3 bg-white p-4 rounded-3xl border border-gray-100 shadow-inner mb-6 relative">
-                    <input type="text" id="nome" placeholder="Seu Nome"
-                        class="w-full p-4 rounded-xl border border-gray-100 bg-gray-50 outline-primary text-sm">
-                    <input type="tel" id="celular" placeholder="Seu Celular"
-                        class="w-full p-4 rounded-xl border border-gray-100 bg-gray-50 outline-primary text-sm"
-                        oninput="maskCelular(this)" maxlength="15">
-
-                    <div class="relative w-full">
-                        <input type="text" id="endereco" placeholder="Digite seu endereço completo" autocomplete="off"
-                            class="w-full p-4 rounded-xl border border-gray-100 bg-gray-50 outline-primary text-sm pr-12 relative z-10">
-                        <div id="autocomplete-list" class="autocomplete-items hidden"></div>
-                        <button onclick="getPosicao()" type="button"
-                            class="absolute right-0 top-0 h-full w-12 flex items-center justify-center text-primary z-20 active:bg-gray-200 rounded-r-xl transition-colors"
-                            title="Pegar localização atual">
-                            <i class="fas fa-location-dot" id="locIcon"></i>
-                        </button>
-                    </div>
-
-                    <div id="freteInfoContainer"
-                        class="hidden flex justify-between p-3 text-xs font-bold text-gray-600 bg-gray-50 rounded-xl border border-dashed">
-                        <span id="freteDistancia">Distância: -- km</span>
-                        <span id="freteValor" class="text-green-600">Frete: R$ 0,00</span>
-                    </div>
-
-                    <select id="pagamento" onchange="toggleTroco()"
-                        class="w-full p-4 rounded-xl border border-gray-100 bg-gray-50 outline-primary text-sm">
-                        <option value="" disabled selected>Forma de Pagamento</option>
-                        <option value="Pix">Pix</option>
-                        <option value="Cartão">Cartão</option>
-                        <option value="Dinheiro">Dinheiro</option>
-                    </select>
-
-                    <div id="trocoContainer" class="hidden">
-                        <input type="number" id="troco" placeholder="Troco para quanto?"
-                            class="w-full p-4 rounded-xl border border-gray-100 bg-gray-50 outline-primary text-sm">
-                    </div>
-
-                    <textarea id="obs" placeholder="Alguma observação?"
-                        class="w-full p-4 rounded-xl border border-gray-100 bg-gray-50 outline-primary text-sm h-20"></textarea>
-                </div>
-                <div class="flex justify-end w-full mt-4">
-                    <button class="w-36 bg-green-600 text-white py-3 rounded-xl font-bold uppercase text-xs shadow-md"
-                        onclick="validarEEnviarPedido()">
-                        Enviar Pedido
+                <!-- Mensagem de Carrinho Vazio -->
+                <div id="emptyCartMsg" class="text-center py-12">
+                    <i class="fas fa-shopping-cart text-gray-200 text-6xl mb-4"></i>
+                    <p class="text-gray-500 font-semibold mb-6">Seu carrinho está vazio</p>
+                    <button onclick="closeModal('cartModal')" class="bg-mlBlue text-white px-6 py-2.5 rounded-xl font-bold text-xs uppercase shadow">
+                        Ver Ofertas Disponíveis
                     </button>
                 </div>
             </div>
+
+            <!-- ETAPA 2: Formulário e Dados de Entrega -->
+            <div id="cartStep2" class="hidden">
+                <div class="flex justify-between items-center mb-4 border-b pb-3">
+                    <div class="flex items-center gap-2">
+                        <button onclick="switchCartStep(1)" class="text-mlBlue hover:text-blue-800 mr-1"><i class="fas fa-arrow-left text-lg"></i></button>
+                        <h2 class="text-xl font-bold text-gray-800">Finalizar Pedido</h2>
+                    </div>
+                    <button onclick="closeModal('cartModal')" class="text-gray-400"><i class="fas fa-times text-lg"></i></button>
+                </div>
+
+                <div class="space-y-3 bg-gray-50 p-4 rounded-xl border border-gray-200 text-sm mb-4">
+                    <div>
+                        <label class="block text-xs font-bold text-gray-700 mb-1">Seu Nome *</label>
+                        <input type="text" id="nome" placeholder="Nome completo"
+                            class="w-full p-3 rounded-lg border border-gray-300 bg-white outline-none focus:border-mlBlue">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-gray-700 mb-1">WhatsApp / Celular *</label>
+                        <input type="tel" id="celular" placeholder="(65) 99999-9999"
+                            class="w-full p-3 rounded-lg border border-gray-300 bg-white outline-none focus:border-mlBlue"
+                            oninput="maskCelular(this)" maxlength="15">
+                    </div>
+
+                    <div class="relative">
+                        <label class="block text-xs font-bold text-gray-700 mb-1">Endereço de Entrega *</label>
+                        <div class="relative">
+                            <input type="text" id="endereco" placeholder="Rua, número, bairro e cidade" autocomplete="off"
+                                class="w-full p-3 pr-10 rounded-lg border border-gray-300 bg-white outline-none focus:border-mlBlue">
+                            <button onclick="getPosicao()" type="button"
+                                class="absolute right-0 top-0 h-full w-10 flex items-center justify-center text-mlBlue hover:text-blue-800"
+                                title="Usar minha localização atual">
+                                <i class="fas fa-location-crosshairs text-base" id="locIcon"></i>
+                            </button>
+                        </div>
+                        <div id="autocomplete-list" class="autocomplete-items hidden"></div>
+                    </div>
+
+                    <!-- Exibição do Cálculo de Frete -->
+                    <div id="freteInfoContainer"
+                        class="hidden flex justify-between p-3 text-xs font-bold text-gray-700 bg-emerald-50 rounded-lg border border-emerald-200">
+                        <span id="freteDistancia"><i class="fas fa-route text-emerald-600 mr-1"></i>Distância: -- km</span>
+                        <span id="freteValor" class="text-mlGreen">Frete: R$ 0,00</span>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-gray-700 mb-1">Forma de Pagamento *</label>
+                        <select id="pagamento" onchange="toggleTroco()"
+                            class="w-full p-3 rounded-lg border border-gray-300 bg-white outline-none focus:border-mlBlue">
+                            <option value="" disabled selected>Selecione uma opção</option>
+                            <option value="Pix">Pix (Aprovação rápida)</option>
+                            <option value="Cartão">Cartão de Crédito / Débito</option>
+                            <option value="Dinheiro">Dinheiro na entrega</option>
+                        </select>
+                    </div>
+
+                    <div id="trocoContainer" class="hidden">
+                        <label class="block text-xs font-bold text-gray-700 mb-1">Troco para quanto?</label>
+                        <input type="number" id="troco" placeholder="Ex: R$ 100"
+                            class="w-full p-3 rounded-lg border border-gray-300 bg-white outline-none focus:border-mlBlue">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-gray-700 mb-1">Observações adicionais</label>
+                        <textarea id="obs" placeholder="Ex: Ponto de referência, cor do produto..."
+                            class="w-full p-3 rounded-lg border border-gray-300 bg-white outline-none focus:border-mlBlue h-16"></textarea>
+                    </div>
+                </div>
+
+                <!-- Resumo Final com Frete e Total -->
+                <div class="bg-gray-100 p-3 rounded-xl mb-4 space-y-1 text-xs">
+                    <div class="flex justify-between text-gray-600">
+                        <span>Produtos:</span>
+                        <span id="checkoutSubtotal">R$ 0,00</span>
+                    </div>
+                    <div class="flex justify-between text-gray-600">
+                        <span>Frete estimado:</span>
+                        <span id="checkoutFrete">R$ 0,00</span>
+                    </div>
+                    <div class="flex justify-between font-black text-gray-900 text-sm border-t pt-2 mt-1">
+                        <span>Total do Pedido:</span>
+                        <span id="checkoutTotal" class="text-mlGreen">R$ 0,00</span>
+                    </div>
+                </div>
+
+                <button class="w-full bg-mlGreen hover:bg-emerald-600 text-white py-3.5 rounded-xl font-bold uppercase text-xs shadow-lg transition-all active:scale-95 flex items-center justify-center gap-2"
+                    onclick="validarEEnviarPedido()">
+                    <i class="fab fa-whatsapp text-lg"></i> Enviar Pedido pelo WhatsApp
+                </button>
+            </div>
         </div>
     </div>
 
-
+    <!-- Tela de Carregamento (Loading overlay) -->
     <div id="loading-screen"
-        class="fixed inset-0 z-[9999] bg-primary/40 backdrop-blur-sm flex flex-col items-center justify-center transition-opacity duration-500 hidden opacity-0">
-        <div class="relative w-[200px] h-[200px]">
-            <div class="w-full h-full border-8 border-yellow-500/20 border-t-yellow-500 rounded-full animate-spin"></div>
-            <img src="loading.png" class="absolute inset-0 m-auto w-[150px] h-[150px] object-contain rounded-full" />
+        class="fixed inset-0 z-[9999] bg-black/50 backdrop-blur-sm flex flex-col items-center justify-center transition-opacity duration-300 hidden opacity-0">
+        <div class="bg-white p-6 rounded-2xl shadow-2xl flex flex-col items-center gap-3">
+            <div class="w-12 h-12 border-4 border-yellow-400 border-t-mlBlue rounded-full animate-spin"></div>
+            <p class="text-xs font-bold text-gray-700 uppercase tracking-wider">Processando...</p>
         </div>
     </div>
 
+    <!-- SCRIPT DA APLICAÇÃO -->
     <script>
+        // BASE DE DADOS DOS PRODUTOS COM A NOVA ESTRUTURA
         const listaProdutos = [
+            // ELETRODOMÉSTICOS E UTENSÍLIOS (Destaques)
             {
-                id: 1,
-                categoria: "smartphones",
+                id: 101,
+                categoria: "eletrodomesticos",
                 destaque: true,
-                nome: "Smartphone Xiaomi Redmi Note",
-                desc: "128GB / 8GB RAM / Câmera Tripla de alta definição com excelente autonomia de bateria e design moderno.",
-                preco: 1199.90,
+                nome: "Fritadeira Air Fryer Digital 5.5L Inox",
+                desc: "Painel touch screen, 1500W de potência, cesto antiaderente para receitas saudáveis e sem óleo.",
+                preco: 399.90,
+                precoAnterior: 549.90,
+                parcelamento: "10x de R$ 39,99 sem juros",
                 fotos: [
-                    "https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=500&auto=format&fit=crop&q=60",
-                    "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=500&auto=format&fit=crop&q=60",
-                    "https://images.unsplash.com/photo-1565849904461-04a58ad377e0?w=500&auto=format&fit=crop&q=60",
-                    "https://images.unsplash.com/photo-1580910051074-3eb694886505?w=500&auto=format&fit=crop&q=60"
+                    "https://images.unsplash.com/photo-1584269600464-37b1b58a9fe7?w=500&auto=format&fit=crop&q=60",
+                    "https://images.unsplash.com/photo-1556911220-e15b29be8c8f?w=500&auto=format&fit=crop&q=60"
                 ]
             },
             {
-                id: 2,
-                categoria: "smartphones",
-                destaque: false,
-                nome: "Smartphone de Alta Performance",
-                desc: "256GB / 12GB RAM / 5G com processador ultra rápido para jogos e aplicativos pesados.",
-                preco: 2499.90,
-                fotos: [
-                    "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=500&auto=format&fit=crop&q=60",
-                    "https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=500&auto=format&fit=crop&q=60"
-                ]
-            },
-            {
-                id: 3,
-                categoria: "audio",
+                id: 102,
+                categoria: "eletrodomesticos",
                 destaque: true,
-                nome: "Fone de Ouvido Bluetooth TWS",
-                desc: "Som estéreo imersivo e cancelamento de ruído ativo para melhor experiência sonora.",
-                preco: 149.90,
+                nome: "Aspirador Robô Inteligente com Conexão Wi-Fi",
+                desc: "Varre, aspira e passa pano automaticamente. Sensor anti-queda e mapeamento inteligente de ambientes.",
+                preco: 699.90,
+                precoAnterior: 899.90,
+                parcelamento: "10x de R$ 69,99 sem juros",
                 fotos: [
-                    "https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=500&auto=format&fit=crop&q=60",
-                    "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500&auto=format&fit=crop&q=60",
-                    "https://images.unsplash.com/photo-1484704849700-f032a568e944?w=500&auto=format&fit=crop&q=60"
+                    "https://images.unsplash.com/photo-1589782182703-2aaa69037b5b?w=500&auto=format&fit=crop&q=60"
                 ]
             },
             {
-                id: 4,
-                categoria: "audio",
+                id: 103,
+                categoria: "eletrodomesticos",
                 destaque: false,
-                nome: "Caixa de Som Portátil à Prova d'Água",
-                desc: "Bluetooth, Bass potente, 10h de bateria contínua para festas e viagens.",
-                preco: 229.90,
+                nome: "Liquidificador Turbo Pro 1200W Copo de Vidro",
+                desc: "Lâminas em aço inox de alta performance, 12 velocidades e função pulsar para gelo.",
+                preco: 189.90,
+                precoAnterior: 249.90,
+                parcelamento: "6x de R$ 31,65 sem juros",
                 fotos: [
-                    "https://images.unsplash.com/photo-1545454675-3531b543be5d?w=500&auto=format&fit=crop&q=60",
-                    "https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=500&auto=format&fit=crop&q=60"
+                    "https://images.unsplash.com/photo-1570222094114-d054a817e56b?w=500&auto=format&fit=crop&q=60"
                 ]
             },
             {
-                id: 5,
-                categoria: "acessorios",
-                destaque: false,
-                nome: "Carregador Turbo Fast Charge 20W",
-                desc: "Carregamento ultrarrápido com cabo incluso de alta resistência.",
-                preco: 79.90,
+                id: 104,
+                categoria: "eletrodomesticos",
+                destaque: true,
+                nome: "Kit de Utensílios de Cozinha em Silicone 12 Peças",
+                desc: "Resistentes ao calor, cabo em madeira nobre anti-risco para panelas e antiaderentes.",
+                preco: 119.90,
+                precoAnterior: 169.90,
+                parcelamento: "4x de R$ 29,97 sem juros",
                 fotos: [
-                    "https://images.unsplash.com/photo-1583863788434-e58a36330cf0?w=500&auto=format&fit=crop&q=60"
+                    "https://images.unsplash.com/photo-1590794056226-77ef3a6c4743?w=500&auto=format&fit=crop&q=60"
                 ]
             },
-            {
-                id: 6,
-                categoria: "acessorios",
-                destaque: false,
-                nome: "Smartwatch Esportivo Inteligente",
-                desc: "Monitor cardíaco, notificações de redes sociais e GPS integrado.",
-                preco: 299.90,
-                fotos: [
-                    "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500&auto=format&fit=crop&q=60",
-                    "https://images.unsplash.com/photo-1508685096489-7aacd43bd3b1?w=500&auto=format&fit=crop&q=60"
-                ]
-            },
+
+            // FERRAMENTAS
             {
                 id: 7,
                 categoria: "ferramentas",
                 destaque: true,
-                nome: "Furadeira Dow 850W",
-                desc: "850W, mandril de 10mm e até 1100 RPM para perfurações precisas em madeira e concreto.",
-                preco: 129.90,
+                nome: "Furadeira de Impacto Dow 850W com Kit de Brocas",
+                desc: "850W de potência, mandril 1/2 polegada, chave de mandril e maleta reforçada.",
+                preco: 189.90,
+                precoAnterior: 249.90,
+                parcelamento: "6x de R$ 31,65 sem juros",
                 fotos: [
                     "https://images.unsplash.com/photo-1504148455328-c376907d081c?w=500&auto=format&fit=crop&q=60",
                     "https://images.unsplash.com/photo-1530124566582-a618bc2615dc?w=500&auto=format&fit=crop&q=60"
@@ -383,11 +628,56 @@
                 id: 8,
                 categoria: "ferramentas",
                 destaque: false,
-                nome: "Parafusadeira Sem Fio 12V",
-                desc: "Acompanha bateria recarregável, maleta rígida e kit completo de acessórios.",
-                preco: 149.90,
+                nome: "Parafusadeira e Furadeira Sem Fio Bateria 12V",
+                desc: "Bateria de Lítio, controle de torque de 18 posições, luz LED integrada e jogo de bits.",
+                preco: 159.90,
+                precoAnterior: 219.90,
+                parcelamento: "5x de R$ 31,98 sem juros",
                 fotos: [
                     "https://images.unsplash.com/photo-1530124566582-a618bc2615dc?w=500&auto=format&fit=crop&q=60"
+                ]
+            },
+
+            // ELETRÔNICOS
+            {
+                id: 1,
+                categoria: "eletronicos",
+                destaque: true,
+                nome: "Smartphone Xiaomi Redmi Note 128GB / 8GB RAM",
+                desc: "Tela AMOLED 120Hz, Câmera Tripla 50MP, bateria de 5000mAh e carregamento ultrarrápido.",
+                preco: 1199.90,
+                precoAnterior: 1499.90,
+                parcelamento: "10x de R$ 119,99 sem juros",
+                fotos: [
+                    "https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=500&auto=format&fit=crop&q=60",
+                    "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=500&auto=format&fit=crop&q=60"
+                ]
+            },
+            {
+                id: 3,
+                categoria: "eletronicos",
+                destaque: true,
+                nome: "Fone de Ouvido Bluetooth TWS Pro estéreo",
+                desc: "Cancelamento ativo de ruído, case carregadora com display numérico e bateria de longa duração.",
+                preco: 149.90,
+                precoAnterior: 199.90,
+                parcelamento: "4x de R$ 37,47 sem juros",
+                fotos: [
+                    "https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=500&auto=format&fit=crop&q=60",
+                    "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500&auto=format&fit=crop&q=60"
+                ]
+            },
+            {
+                id: 6,
+                categoria: "eletronicos",
+                destaque: false,
+                nome: "Smartwatch Esportivo Amoled Inteligente",
+                desc: "Monitor de batimentos cardíacos, sono, modo esporte multifunções e resistência à água.",
+                preco: 289.90,
+                precoAnterior: 359.90,
+                parcelamento: "8x de R$ 36,23 sem juros",
+                fotos: [
+                    "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500&auto=format&fit=crop&q=60"
                 ]
             }
         ];
@@ -412,64 +702,65 @@
             const loader = document.getElementById('loading-screen');
             if (loader) {
                 loader.classList.remove('opacity-100');
-                setTimeout(() => loader.classList.add('hidden'), 500);
+                setTimeout(() => loader.classList.add('hidden'), 300);
             }
         }
 
         window.addEventListener('load', () => {
             renderMenu();
-
             abrirLoading();
-            setTimeout(fecharLoading, 1500);
+            setTimeout(fecharLoading, 800);
 
             const inputEndereco = document.getElementById('endereco');
             const listContainer = document.getElementById('autocomplete-list');
             let currentTimeout;
 
-            inputEndereco.addEventListener('input', function () {
-                const query = this.value.trim();
-                clearTimeout(currentTimeout);
+            if (inputEndereco) {
+                inputEndereco.addEventListener('input', function () {
+                    const query = this.value.trim();
+                    clearTimeout(currentTimeout);
 
-                if (query.length < 3) {
-                    listContainer.classList.add('hidden');
-                    return;
-                }
+                    if (query.length < 3) {
+                        listContainer.classList.add('hidden');
+                        return;
+                    }
 
-                currentTimeout = setTimeout(() => {
-                    const url = `https://api.geoapify.com/v1/geocode/autocomplete?text=${encodeURIComponent(query)}&bias=proximity:${lonPizzaria},${latPizzaria}&lang=pt&limit=5&apiKey=${GEOAPIFY_API_KEY}`;
+                    currentTimeout = setTimeout(() => {
+                        const url = `https://api.geoapify.com/v1/geocode/autocomplete?text=${encodeURIComponent(query)}&bias=proximity:${lonPizzaria},${latPizzaria}&lang=pt&limit=5&apiKey=${GEOAPIFY_API_KEY}`;
 
-                    fetch(url)
-                        .then(response => response.json())
-                        .then(data => {
-                            listContainer.innerHTML = '';
-                            if (!data.features || data.features.length === 0) {
-                                listContainer.classList.add('hidden');
-                                return;
-                            }
-
-                            data.features.forEach(feature => {
-                                const label = feature.properties.formatted;
-                                const coordinates = feature.geometry.coordinates;
-
-                                const item = document.createElement('div');
-                                item.innerHTML = label;
-
-                                item.addEventListener('mousedown', (e) => {
-                                    e.preventDefault();
-                                    inputEndereco.value = label;
+                        fetch(url)
+                            .then(response => response.json())
+                            .then(data => {
+                                listContainer.innerHTML = '';
+                                if (!data.features || data.features.length === 0) {
                                     listContainer.classList.add('hidden');
-                                    calcularDistanciaHaversine(coordinates[1], coordinates[0]);
-                                });
-                                listContainer.appendChild(item);
-                            });
-                            listContainer.classList.remove('hidden');
-                        });
-                }, 300);
-            });
+                                    return;
+                                }
 
-            document.addEventListener('click', (e) => {
-                if (e.target !== inputEndereco) listContainer.classList.add('hidden');
-            });
+                                data.features.forEach(feature => {
+                                    const label = feature.properties.formatted;
+                                    const coordinates = feature.geometry.coordinates;
+
+                                    const item = document.createElement('div');
+                                    item.innerHTML = label;
+
+                                    item.addEventListener('mousedown', (e) => {
+                                        e.preventDefault();
+                                        inputEndereco.value = label;
+                                        listContainer.classList.add('hidden');
+                                        calcularDistanciaHaversine(coordinates[1], coordinates[0]);
+                                    });
+                                    listContainer.appendChild(item);
+                                });
+                                listContainer.classList.remove('hidden');
+                            }).catch(() => {});
+                    }, 300);
+                });
+
+                document.addEventListener('click', (e) => {
+                    if (e.target !== inputEndereco) listContainer.classList.add('hidden');
+                });
+            }
         });
 
         async function forçarCalculoPorTexto(texto) {
@@ -483,7 +774,7 @@
                     return true;
                 }
             } catch (e) {
-                console.error("Erro na busca de endereço:", e);
+                console.error("Erro no endereço:", e);
             }
             return false;
         }
@@ -493,8 +784,7 @@
             const dLat = (latDestino - latPizzaria) * Math.PI / 180;
             const dLon = (lonDestino - lonPizzaria) * Math.PI / 180;
 
-            const a =
-                Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+            const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
                 Math.cos(latPizzaria * Math.PI / 180) * Math.cos(latDestino * Math.PI / 180) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
 
             const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
@@ -509,44 +799,10 @@
             }
 
             document.getElementById('freteInfoContainer').classList.remove('hidden');
-            document.getElementById('freteDistancia').innerText = `Distância aprox: ${distanciaGlobal}`;
+            document.getElementById('freteDistancia').innerText = `Distância: ${distanciaGlobal}`;
             document.getElementById('freteValor').innerText = `Frete: R$ ${valorFreteGlobal.toFixed(2).replace('.', ',')}`;
 
-            updateUI();
-        }
-
-        async function validarEEnviarPedido() {
-            const nome = document.getElementById('nome').value.trim();
-            const celular = document.getElementById('celular').value.trim();
-            const endereco = document.getElementById('endereco').value.trim();
-            const pagamento = document.getElementById('pagamento').value;
-
-            if (!nome || !celular || !endereco || !pagamento) {
-                showAlert("Por favor, preencha todos os campos obrigatórios.");
-                return;
-            }
-
-            abrirLoading();
-
-            if (valorFreteGlobal === 0) {
-                await forçarCalculoPorTexto(endereco);
-            }
-
-            setTimeout(() => {
-                sendWhatsApp();
-                fecharLoading();
-            }, 1200);
-        }
-
-        function toggleTroco() {
-            const pagamento = document.getElementById('pagamento').value;
-            const trocoContainer = document.getElementById('trocoContainer');
-            if (pagamento === 'Dinheiro') {
-                trocoContainer.classList.remove('hidden');
-            } else {
-                trocoContainer.classList.add('hidden');
-                document.getElementById('troco').value = '';
-            }
+            updateTotals();
         }
 
         function getPosicao() {
@@ -555,7 +811,6 @@
                 return showAlert("Seu navegador não suporta geolocalização.");
             }
             campoEndereco.value = "Buscando localização...";
-            campoEndereco.classList.add('animate-pulse');
 
             navigator.geolocation.getCurrentPosition(
                 async (position) => {
@@ -567,299 +822,28 @@
                         if (data.display_name) {
                             const formatado = data.address.road ? `${data.address.road}${data.address.house_number ? ', ' + data.address.house_number : ''} - ${data.address.suburb || ''}` : data.display_name;
                             campoEndereco.value = formatado;
-                            campoEndereco.classList.remove('animate-pulse');
                             calcularDistanciaHaversine(lat, lon);
                         }
                     } catch (error) {
-                        liberarCampoParaDigitacao();
+                        campoEndereco.value = "";
+                        campoEndereco.placeholder = "Digite seu endereço completo";
                     }
                 },
-                (error) => { liberarCampoParaDigitacao(); },
+                () => {
+                    campoEndereco.value = "";
+                    campoEndereco.placeholder = "Digite seu endereço completo";
+                },
                 { enableHighAccuracy: true, timeout: 7000 }
             );
-
-            function liberarCampoParaDigitacao() {
-                campoEndereco.value = "";
-                campoEndereco.placeholder = "Digite seu endereço completo";
-                campoEndereco.classList.remove('animate-pulse');
-                campoEndereco.focus();
-            }
-        }
-
-        function setActiveTab(id) {
-            document.querySelectorAll('.btn-tab').forEach(b => b.classList.remove('active'));
-            const activeBtn = document.getElementById('btn-' + id);
-            if (activeBtn) activeBtn.classList.add('active');
-        }
-
-        function scrollToIndexAndCenter(elementId) {
-            const element = document.getElementById(elementId);
-            if (element) {
-                const elementRect = element.getBoundingClientRect();
-                const absoluteElementTop = elementRect.top + window.pageYOffset;
-                const middlePosition = absoluteElementTop - (window.innerHeight / 2) + (elementRect.height / 2);
-
-                window.scrollTo({ top: middlePosition, behavior: 'smooth' });
-                setActiveTab(elementId);
-            }
-        }
-
-        window.addEventListener('scroll', () => {
-            const sections = document.querySelectorAll('.category-section, footer#info');
-            const scrollPos = window.scrollY || document.documentElement.scrollTop;
-
-            sections.forEach(sec => {
-                if (sec.offsetTop - (window.innerHeight / 2) <= scrollPos && (sec.offsetTop + sec.offsetHeight - (window.innerHeight / 2)) > scrollPos) {
-                    setActiveTab(sec.id);
-                }
-            });
-        });
-
-        function addToCart(name, price) {
-            cart.push({ nome: name, preco: price });
-            if (typeof fbq === 'function') fbq('track', 'AddToCart', { content_name: name, value: price, currency: 'BRL' });
-            updateUI();
-            showAlert('Produto adicionado ao carrinho!', 'success');
-        }
-
-        function updateUI() {
-            const badge = document.getElementById('cartBadge');
-            badge.innerText = cart.length;
-            badge.classList.toggle('hidden', cart.length === 0);
-        }
-
-        function showCart() {
-            const list = document.getElementById('cartList');
-            const actions = document.getElementById('cartActions');
-            const emptyMsg = document.getElementById('emptyCartMsg');
-            document.getElementById('cartStep1').classList.remove('hidden');
-            document.getElementById('cartStep2').classList.add('hidden');
-
-            if (cart.length === 0) {
-                list.innerHTML = ""; actions.classList.add('hidden'); emptyMsg.classList.remove('hidden');
-            } else {
-                emptyMsg.classList.add('hidden'); actions.classList.remove('hidden');
-                list.innerHTML = cart.map((item, i) => `
-                <div class="flex justify-between items-center bg-white p-4 rounded-2xl border mb-2">
-                    <div><b class="text-sm uppercase block">${item.nome}</b></div>
-                    <div class="text-right"><b>R$ ${item.preco.toFixed(2).replace('.', ',')}</b><br>
-                    <button onclick="removeItem(${i})" class="text-red-400 text-[10px] font-black uppercase">Remover</button></div>
-                </div>`).join('');
-            }
-            document.getElementById('cartModal').classList.remove('hidden');
-            document.getElementById('cartModal').classList.add('flex');
-            updateUI();
-        }
-
-        function switchCartStep(step) {
-            document.getElementById('cartStep1').classList.toggle('hidden', step === 2);
-            document.getElementById('cartStep2').classList.toggle('hidden', step === 1);
-            updateUI();
-        }
-
-        function removeItem(i) {
-            cart.splice(i, 1);
-            if (cart.length === 0) {
-                valorFreteGlobal = 0;
-                distanciaGlobal = "";
-                document.getElementById('freteInfoContainer').classList.add('hidden');
-            }
-            updateUI();
-            showCart();
-        }
-
-        function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
-        function handleOutsideClick(event) { if (event.target.classList.contains('modal-container')) closeModal(event.target.id); }
-
-        function showAlert(message, type = 'error') {
-            document.getElementById('alertIcon').innerHTML = type === 'success' ? '✨' : '🔔';
-            document.getElementById('alertTitle').innerText = type === 'success' ? 'Sucesso!' : 'Atenção';
-            document.getElementById('alertMessage').innerText = message;
-            document.getElementById('alertModal').classList.remove('hidden');
-            document.getElementById('alertModal').classList.add('flex');
-        }
-        function closeAlert() { document.getElementById('alertModal').classList.add('hidden'); }
-
-        function maskCelular(input) {
-            let v = input.value.replace(/\D/g, "");
-            if (v.length > 11) v = v.slice(0, 11);
-            if (v.length > 10) v = v.replace(/^(\d{2})(\d{5})(\d{4}).*/, "($1) $2-$3");
-            else if (v.length > 6) v = v.replace(/^(\d{2})(\d{4})(\d{0,4}).*/, "($1) $2-$3");
-            input.value = v;
-        }
-
-        function sendWhatsApp() {
-            const nome = document.getElementById('nome').value.trim();
-            const celular = document.getElementById('celular').value.trim();
-            const endereco = document.getElementById('endereco').value.trim();
-            const pagamento = document.getElementById('pagamento').value;
-            const troco = document.getElementById('troco').value.trim();
-            const obs = document.getElementById('obs').value.trim();
-
-            const totalItens = cart.reduce((acc, item) => acc + item.preco, 0);
-            const totalGeral = totalItens + valorFreteGlobal;
-
-            if (typeof fbq === 'function') {
-                fbq('track', 'Purchase', { value: totalGeral, currency: 'BRL' });
-            }
-
-            let msg = `*NOVO PEDIDO - BEST IMPORTS*
-`;
-            msg += `----------------------------------
-`;
-            msg += `*Cliente:* ${nome}
-`;
-            msg += `*WhatsApp:* ${celular}
-`;
-            msg += `*Endereço:* ${endereco}
-`;
-            msg += `*Pagamento:* ${pagamento}
-`;
-
-            if (pagamento === 'Dinheiro' && troco) {
-                msg += `*Troco para:* R$ ${parseFloat(troco).toFixed(2).replace('.', ',')}
-`;
-            }
-
-            if (obs) msg += `*Observação:* ${obs}
-`;
-
-            msg += `
-*ITENS:*
-`;
-            cart.forEach(item => {
-                msg += `- ${item.nome} (R$ ${item.preco.toFixed(2).replace('.', ',')})
-`;
-            });
-
-            msg += `
-----------------------------------
-`;
-            msg += `*Subtotal:* R$ ${totalItens.toFixed(2).replace('.', ',')}
-`;
-
-            if (valorFreteGlobal > 0) {
-                msg += `*Frete (${distanciaGlobal}):* R$ ${valorFreteGlobal.toFixed(2).replace('.', ',')}
-`;
-            } else {
-                msg += `*Frete:* A combinar
-`;
-            }
-
-            msg += `*TOTAL DO PEDIDO: R$ ${totalGeral.toFixed(2).replace('.', ',')}*`;
-
-            window.open(`https://wa.me/5565993443715?text=${encodeURIComponent(msg)}`);
-
-            cart = [];
-            valorFreteGlobal = 0;
-            distanciaGlobal = "";
-            document.getElementById('freteInfoContainer').classList.add('hidden');
-            updateUI();
-            closeModal('cartModal');
-            showAlert('Pedido enviado com sucesso!', 'success');
-        }
-
-        // Funções do Modal de Detalhes do Produto
-        function abrirDetalhesProduto(id) {
-            const p = listaProdutos.find(item => item.id === id);
-            if (!p) return;
-
-            const fotos = p.fotos && p.fotos.length > 0 ? p.fotos : [p.foto || 'https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=500&auto=format&fit=crop&q=60'];
-            const primeiraFoto = fotos[0];
-
-            let htmlFotosMini = fotos.map((f, idx) => `
-                <img src="${f}" onclick="trocarFotoPrincipal('${f}')" class="w-16 h-16 object-cover rounded-lg border-2 border-gray-200 cursor-pointer hover:border-black transition-all ${idx === 0 ? 'border-black' : ''}" />
-            `).join('');
-
-            const content = `
-                <div class="p-6 max-h-[85vh] overflow-y-auto">
-                    <div class="mb-4">
-                        <img id="imgPrincipal" src="${primeiraFoto}" class="w-full h-64 sm:h-80 object-cover rounded-2xl border" />
-                    </div>
-                    <div class="flex gap-2 mb-4 overflow-x-auto pb-2">
-                        ${htmlFotosMini}
-                    </div>
-                    <h2 class="text-xl font-bold uppercase text-gray-900 mb-2">${p.nome}</h2>
-                    <p class="text-sm text-gray-600 mb-6 leading-relaxed">${p.desc}</p>
-                    <div class="flex flex-col sm:flex-row items-center justify-between border-t pt-4 gap-4">
-                        <span class="text-2xl font-black text-primary">R$ ${p.preco.toFixed(2).replace('.', ',')}</span>
-                        <div class="flex gap-2 w-full sm:w-auto">
-                            <button onclick="adicionarApenasDoModal(${p.id})" class="flex-1 sm:flex-none bg-gray-200 text-gray-800 px-4 py-3 rounded-xl font-bold uppercase text-xs shadow hover:bg-gray-300 active:scale-95 transition-all">
-                                Adicionar
-                            </button>
-                            <button onclick="adicionarEFinalizarDoModal(${p.id})" class="flex-1 sm:flex-none bg-green-600 text-white px-5 py-3 rounded-xl font-bold uppercase text-xs shadow-lg active:scale-95 transition-all">
-                                Finalizar Compra
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            `;
-
-            document.getElementById('productModalContent').innerHTML = content;
-            document.getElementById('productModal').classList.remove('hidden');
-            document.getElementById('productModal').classList.add('flex');
-        }
-
-        function trocarFotoPrincipal(url) {
-            document.getElementById('imgPrincipal').src = url;
-        }
-
-        function adicionarApenasDoModal(id) {
-            addToCartById(id);
-            closeModal('productModal');
-        }
-
-        function adicionarEFinalizarDoModal(id) {
-            addToCartById(id);
-            closeModal('productModal');
-            showCart();
-        }
-
-        function renderProduto(p) {
-            const fotoPrincipal = p.fotos && p.fotos.length > 0 ? p.fotos[0] : p.foto;
-            return `
-                <div class="bg-white border border-gray-100 rounded-xl p-4 flex flex-col justify-between transition-all hover:shadow-md cursor-pointer" onclick="abrirDetalhesProduto(${p.id})">
-                    <div>
-                        <img src="${fotoPrincipal}" alt="${p.nome}" class="w-full h-40 rounded-lg object-cover mb-3 border">
-                        <h3 class="font-semibold text-[13px] uppercase mb-1 line-clamp-2">${p.nome}</h3>
-                        <p class="text-[11px] text-gray-500 leading-snug mb-3 line-clamp-2">${p.desc}</p>
-                    </div>
-                    <div class="flex items-center justify-between pt-3 border-t border-gray-100 mt-auto">
-                        <span class="font-bold text-[13px]">R$ ${p.preco.toFixed(2).replace('.', ',')}</span>
-                        <span class="bg-primary text-white px-3 py-2 rounded-xl font-bold text-[11px] uppercase tracking-wider">Ver Detalhes</span>
-                    </div>
-                </div>`;
-        }
-
-        function addToCartById(id) {
-            const produto = listaProdutos.find(p => p.id === id);
-            if (!produto) return;
-            addToCart(produto.nome, produto.preco);
-        }
-
-        function renderLista(elementId, produtos) {
-            const element = document.getElementById(elementId);
-            if (!element) return;
-
-            element.innerHTML = produtos.length
-                ? produtos.map(renderProduto).join('')
-                : `<p class="col-span-full py-6 text-center text-sm text-gray-400">Nenhum produto disponível.</p>`;
         }
 
         function renderMenu() {
-            renderLista(
-                'destaquesList',
-                listaProdutos.filter(p => p.destaque === true)
-            );
+            renderLista('destaquesList', listaProdutos.filter(p => p.destaque === true));
 
-            ['smartphones', 'audio', 'acessorios', 'ferramentas'].forEach(categoria => {
-                renderLista(
-                    `${categoria}List`,
-                    listaProdutos.filter(p => p.categoria === categoria)
-                );
+            ['eletrodomesticos', 'ferramentas', 'eletronicos'].forEach(categoria => {
+                renderLista(`${categoria}List`, listaProdutos.filter(p => p.categoria === categoria));
             });
         }
     </script>
 </body>
-
 </html>
