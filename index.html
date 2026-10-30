@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Best Imports - Eletrônicos, Ferramentas & Eletrodomésticos</title>
-    <!-- TAG DO FAVICON / ÍCONE DA ABA -->
+    <!-- ÍCONE DA ABA -->
     <link rel="icon" type="image/png" href="logo.png">
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -82,15 +82,13 @@
     <!-- CABEÇALHO UNIFICADO BEST IMPORTS -->
     <header class="bg-brandBlue text-white border-b-4 border-brandYellow sticky top-0 z-40 shadow-lg">
         <div class="max-w-7xl mx-auto px-4 py-3">
-            <!-- Linha Superior: Logo, Pesquisa e Carrinho -->
             <div class="flex items-center justify-between gap-3 md:gap-6">
-                
                 <!-- Logo Best Imports -->
                 <a href="#" class="flex items-center gap-2 flex-shrink-0 group">
                     <img src="logo.png" alt="Best Imports Logo" class="h-12 sm:h-14 md:h-24 w-auto object-contain transition-transform group-hover:scale-105 drop-shadow-md" onerror="this.src='https://placehold.co/180x60/002F6C/ffffff?text=BEST+IMPORTS'">
                 </a>
 
-                <!-- Barra de Pesquisa Integrada -->
+                <!-- Barra de Pesquisa -->
                 <div class="flex-1 max-w-2xl relative">
                     <div class="flex items-center bg-white rounded-xl shadow-inner border-2 border-transparent focus-within:border-brandYellow overflow-hidden transition-all">
                         <input type="text" id="searchInput" onkeyup="filterProducts()" placeholder="Buscar eletrodomésticos, ferramentas, eletrônicos..." 
@@ -131,7 +129,7 @@
 
     <main class="max-w-7xl mx-auto w-full px-3 sm:px-4 py-6 space-y-8 flex-grow">
 
-        <!-- BANNER HERO DE DESTAQUE DE ELETRODOMÉSTICOS & UTENSÍLIOS -->
+        <!-- BANNER HERO -->
         <section class="relative rounded-3xl overflow-hidden shadow-xl bg-gradient-to-r from-brandBlueDark via-brandBlue to-blue-900 p-6 md:p-10 text-white border-2 border-brandYellow/30">
             <div class="flex flex-col md:flex-row items-center justify-between gap-6 relative z-10">
                 <div class="space-y-4 text-center md:text-left max-w-xl">
@@ -148,9 +146,6 @@
                         <a href="#eletrodomesticos" class="bg-brandYellow hover:bg-brandYellowHover text-brandBlueDark font-black px-6 py-3 rounded-xl shadow-lg transition-transform active:scale-95 text-xs uppercase flex items-center gap-2">
                             <i class="fas fa-fire"></i> Ver Eletrodomésticos
                         </a>
-                        <button onclick="showAlert('Cupom BEST50 aplicado com sucesso no seu checkout!', 'success')" class="bg-white/10 hover:bg-white/20 text-white border border-white/20 font-bold px-5 py-3 rounded-xl backdrop-blur transition-all active:scale-95 text-xs flex items-center gap-2">
-                            <i class="fas fa-ticket-alt text-brandYellow"></i> Cupom R$ 50 OFF
-                        </button>
                     </div>
                 </div>
 
@@ -167,7 +162,7 @@
             </div>
         </section>
 
-        <!-- SEÇÃO 1: DESTAQUES DA LOJA -->
+        <!-- SEÇÃO 1: DESTAQUES -->
         <section id="destaques" class="category-section space-y-4">
             <div class="flex items-center justify-between border-b border-gray-200 pb-3">
                 <div class="flex items-center gap-2">
@@ -232,7 +227,7 @@
         </div>
     </footer>
 
-    <!-- MODAL DE DETALHES DO PRODUTO (NOVO DESIGN INTEGRADO) -->
+    <!-- MODAL DE DETALHES DO PRODUTO (Suporta até 5+ fotos em miniaturas) -->
     <div id="productModal" class="modal-container" onclick="handleOutsideClick(event)">
         <div class="modal-content-center max-w-2xl">
             <div class="bg-brandBlue text-white px-5 py-3.5 flex justify-between items-center border-b border-blue-900">
@@ -241,13 +236,11 @@
                     <i class="fas fa-times text-lg"></i>
                 </button>
             </div>
-            <div id="productModalContent" class="p-5 sm:p-6 space-y-4 max-h-[80vh] overflow-y-auto">
-                <!-- Conteúdo Injetado via JavaScript -->
-            </div>
+            <div id="productModalContent" class="p-5 sm:p-6 space-y-4 max-h-[80vh] overflow-y-auto"></div>
         </div>
     </div>
 
-    <!-- MODAL DO CARRINHO EM 2 ETAPAS (DESIGN UNIFICADO) -->
+    <!-- MODAL DO CARRINHO EM 2 ETAPAS -->
     <div id="cartModal" class="modal-container" onclick="handleOutsideClick(event)">
         <div class="modal-content-center max-w-lg">
             
@@ -359,7 +352,7 @@
                         </div>
                     </div>
 
-                    <!-- Resumo Financeiro Final -->
+                    <!-- Resumo Final -->
                     <div class="bg-brandBlueDark text-white p-3.5 rounded-xl space-y-1 text-xs">
                         <div class="flex justify-between text-blue-200">
                             <span>Subtotal Produtos:</span>
@@ -393,10 +386,9 @@
         </div>
     </div>
 
-    <!-- SCRIPT COMPLETO DA APLICAÇÃO -->
+    <!-- SCRIPT DA APLICAÇÃO -->
     <script>
         const listaProdutos = [
-            // ELETRODOMÉSTICOS & UTENSÍLIOS
             {
                 id: 101,
                 categoria: "eletrodomesticos",
@@ -425,34 +417,6 @@
                 ]
             },
             {
-                id: 103,
-                categoria: "eletrodomesticos",
-                destaque: false,
-                nome: "Liquidificador Turbo Pro 1200W Copo de Vidro",
-                desc: "Lâminas em aço inox de alta resistência, 12 velocidades ajustáveis e função pulsar gelo.",
-                preco: 189.90,
-                precoAnterior: 249.90,
-                parcelamento: "6x de R$ 31,65 sem juros",
-                fotos: [
-                    "https://images.unsplash.com/photo-1570222094114-d054a817e56b?w=500&auto=format&fit=crop&q=60"
-                ]
-            },
-            {
-                id: 104,
-                categoria: "eletrodomesticos",
-                destaque: true,
-                nome: "Kit de Utensílios de Cozinha em Silicone 12 Peças",
-                desc: "Resistente a altíssimas temperaturas com cabo em madeira nobre anti-risco para panelas.",
-                preco: 119.90,
-                precoAnterior: 169.90,
-                parcelamento: "4x de R$ 29,97 sem juros",
-                fotos: [
-                    "https://images.unsplash.com/photo-1590794056226-77ef3a6c4743?w=500&auto=format&fit=crop&q=60"
-                ]
-            },
-
-            // FERRAMENTAS
-            {
                 id: 7,
                 categoria: "ferramentas",
                 destaque: true,
@@ -466,21 +430,6 @@
                 ]
             },
             {
-                id: 8,
-                categoria: "ferramentas",
-                destaque: false,
-                nome: "Parafusadeira Sem Fio Bateria Lítio 12V",
-                desc: "Bateria de alta durabilidade, 18 níveis de torque, luz LED de auxílio e conjunto de bits inclusos.",
-                preco: 159.90,
-                precoAnterior: 219.90,
-                parcelamento: "5x de R$ 31,98 sem juros",
-                fotos: [
-                    "https://images.unsplash.com/photo-1530124566582-a618bc2615dc?w=500&auto=format&fit=crop&q=60"
-                ]
-            },
-
-            // ELETRÔNICOS
-            {
                 id: 1,
                 categoria: "eletronicos",
                 destaque: true,
@@ -491,19 +440,6 @@
                 parcelamento: "10x de R$ 119,99 sem juros",
                 fotos: [
                     "https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=500&auto=format&fit=crop&q=60"
-                ]
-            },
-            {
-                id: 3,
-                categoria: "eletronicos",
-                destaque: true,
-                nome: "Fone de Ouvido Bluetooth TWS Pro Estéreo",
-                desc: "Cancelamento ativo de ruído, case carregadora rápida com display digital e bateria duradoura.",
-                preco: 149.90,
-                precoAnterior: 199.90,
-                parcelamento: "4x de R$ 37,47 sem juros",
-                fotos: [
-                    "https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=500&auto=format&fit=crop&q=60"
                 ]
             }
         ];
@@ -661,7 +597,6 @@
             );
         }
 
-        // DETALHES DO PRODUTO (MODAL)
         function abrirDetalhesProduto(id) {
             const p = listaProdutos.find(item => item.id === id);
             if (!p) return;
@@ -715,7 +650,6 @@
             document.getElementById('productModal').classList.add('flex');
         }
 
-        // GERENCIAMENTO DO CARRINHO
         function addToCartById(id) {
             const p = listaProdutos.find(prod => prod.id === id);
             if (!p) return;
@@ -843,7 +777,6 @@
             }, 800);
         }
 
-        // AUXILIARES
         function renderProdutoCard(p) {
             return `
                 <div class="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 flex flex-col justify-between hover:shadow-lg transition-all duration-300 cursor-pointer group" onclick="abrirDetalhesProduto(${p.id})">
